@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Outcome Wheel</title>
+
+<style>
+
+body{
+background:#ff66a3;
+font-family:Impact;
+text-align:center;
+}
+
+canvas{
+border-radius:50%;
+}
+
+button{
+margin-top:20px;
+padding:12px 30px;
+font-size:20px;
+background:black;
+color:white;
+border:none;
+}
+
+#result{
+font-size:50px;
+margin-top:40px;
+color:black;
+display:none;
+}
+
+#explanation{
+font-size:22px;
+margin-top:15px;
+width:60%;
+margin-left:auto;
+margin-right:auto;
+color:black;
+display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Wheel of Outcomes</h1>
+
+<canvas id="wheel" width="500" height="500"></canvas>
+
+<br>
+
+<button onclick="spin()">SPIN</button>
+
+<div id="result"></div>
+<div id="explanation"></div>
+
+<script>
+
+const options = [
+"Perfect Upload",
+"Power Cut",
+"Barking Dog",
+"Phone Notification",
+"Noisy Neighbour",
+"Internet Disruption",
+"Unauthorized Help",
+"Hidden Notes"
+];
+
+const explanations = {
+"Perfect Upload": "Even when everything works perfectly online, the risk of other problems still exists, which makes in-person exams more dependable.",
+"Power Cut": "A power outage can instantly end an online exam, showing how technical problems can affect students unfairly.",
+"Barking Dog": "Distractions at home can interrupt concentration, unlike the quiet environment of an in-person exam room.",
+"Phone Notification": "Phone alerts and digital distractions can interrupt online exams and affect focus.",
+"Noisy Neighbour": "Noise at home can make it difficult to concentrate during an online exam.",
+"Internet Disruption": "A weak or unstable internet connection can interrupt exam submissions and cause stress.",
+"Unauthorized Help": "Online exams may allow students to receive help from others, which raises concerns about academic integrity.",
+"Hidden Notes": "Students may access hidden notes during online exams, making it harder to ensure fairness."
+};
+
+const colors = [
+"#ff0000",
+"#ffcc00",
+"#00cc66",
+"#0099ff",
+"#9933ff",
+"#ff6600",
+"#00ffff",
+"#ff1493"
+];
+
+let canvas = document.getElementById("wheel");
+let ctx = canvas.getContext("2d");
+
+let arc = Math.PI * 2 / options.length;
+
+function drawWheel(){
+
+for(let i=0;i<options.length;i++){
+
+let angle = i * arc;
+
+ctx.beginPath();
+ctx.fillStyle = colors[i];
+
+ctx.moveTo(250,250);
+ctx.arc(250,250,250,angle,angle+arc);
+ctx.fill();
+
+ctx.save();
+
+ctx.translate(250,250);
+ctx.rotate(angle + arc/2);
+
+ctx.fillStyle="rgba(0,0,0,0.7)";
+ctx.font="16px Impact";
+ctx.textAlign="center";
+
+ctx.fillText(options[i],160,0);
+
+ctx.restore();
+
+}
+
+}
+
+drawWheel();
+
+function spin(){
+
+let deg = Math.floor(Math.random()*360 + 1440);
+
+canvas.style.transition="transform 4s ease-out";
+canvas.style.transform="rotate("+deg+"deg)";
+
+let result = options[Math.floor(Math.random()*options.length)];
+
+setTimeout(function(){
+
+canvas.style.display="none";
+document.querySelector("button").style.display="none";
+
+let r = document.getElementById("result");
+let e = document.getElementById("explanation");
+
+r.style.display="block";
+e.style.display="block";
+
+r.innerText = result;
+e.innerText = explanations[result];
+
+},4000);
+
+}
+
+</script>
+
+</body>
+</html>
