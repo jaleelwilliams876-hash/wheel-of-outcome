@@ -1,24 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Wheel of Outcome</title>
+<title>Outcome Wheel</title>
 
 <style>
 
 body{
 background:#ff66a3;
-font-family:Impact, Arial Black, sans-serif;
+font-family:Impact;
 text-align:center;
-color:white;
-}
-
-h1{
-margin-top:20px;
-}
-
-#wheelContainer{
-position:relative;
 }
 
 canvas{
@@ -27,58 +17,46 @@ border-radius:50%;
 
 button{
 margin-top:20px;
-padding:12px 25px;
+padding:12px 30px;
 font-size:20px;
 background:black;
 color:white;
 border:none;
-border-radius:5px;
-cursor:pointer;
 }
 
-#pointer{
-width:0;
-height:0;
-border-left:20px solid transparent;
-border-right:20px solid transparent;
-border-bottom:30px solid white;
-margin:auto;
-}
-
-#resultScreen{
-display:none;
-height:100vh;
-align-items:center;
-justify-content:center;
-flex-direction:column;
-}
-
-#resultText{
-font-size:70px;
+#result{
+font-size:50px;
+margin-top:40px;
 color:black;
+display:none;
+}
+
+#explanation{
+font-size:22px;
+margin-top:15px;
+width:60%;
+margin-left:auto;
+margin-right:auto;
+color:black;
+display:none;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<h1 id="title">Wheel of  Outcomes</h1>
+<h1>Wheel of Outcomes</h1>
 
-<div id="pointer"></div>
-
-<div id="wheelContainer">
 <canvas id="wheel" width="500" height="500"></canvas>
-</div>
 
 <br>
+
 <button onclick="spin()">SPIN</button>
 
-<div id="resultScreen">
-<h1>Outcome</h1>
-<div id="resultText"></div>
-<p>This shows how unpredictable online exams can be.</p>
-</div>
+<div id="result"></div>
+<div id="explanation"></div>
 
 <script>
 
@@ -87,9 +65,22 @@ const options = [
 "Power Cut",
 "Barking Dog",
 "Phone Notification",
-"Noisy Neighbor",
-"Internet Disruption"
+"Noisy Neighbour",
+"Internet Disruption",
+"Unauthorized Help",
+"Hidden Notes"
 ];
+
+const explanations = {
+"Perfect Upload": "Even when everything works perfectly online, the risk of other problems still exists, which makes in-person exams more dependable.",
+"Power Cut": "A power outage can instantly end an online exam, showing how technical problems can affect students unfairly.",
+"Barking Dog": "Distractions at home can interrupt concentration, unlike the quiet environment of an in-person exam room.",
+"Phone Notification": "Phone alerts and digital distractions can interrupt online exams and affect focus.",
+"Noisy Neighbour": "Noise at home can make it difficult to concentrate during an online exam.",
+"Internet Disruption": "A weak or unstable internet connection can interrupt exam submissions and cause stress.",
+"Unauthorized Help": "Online exams may allow students to receive help from others, which raises concerns about academic integrity.",
+"Hidden Notes": "Students may access hidden notes during online exams, making it harder to ensure fairness."
+};
 
 const colors = [
 "#ff0000",
@@ -97,7 +88,9 @@ const colors = [
 "#00cc66",
 "#0099ff",
 "#9933ff",
-"#ff6600"
+"#ff6600",
+"#00ffff",
+"#ff1493"
 ];
 
 let canvas = document.getElementById("wheel");
@@ -116,7 +109,6 @@ ctx.fillStyle = colors[i];
 
 ctx.moveTo(250,250);
 ctx.arc(250,250,250,angle,angle+arc);
-ctx.lineTo(250,250);
 ctx.fill();
 
 ctx.save();
@@ -124,38 +116,42 @@ ctx.save();
 ctx.translate(250,250);
 ctx.rotate(angle + arc/2);
 
-ctx.textAlign="center";
 ctx.fillStyle="rgba(0,0,0,0.7)";
-ctx.font="bold 18px Impact";
+ctx.font="16px Impact";
+ctx.textAlign="center";
 
-ctx.fillText(options[i],160,5);
+ctx.fillText(options[i],160,0);
 
 ctx.restore();
+
 }
+
 }
 
 drawWheel();
 
 function spin(){
 
-let spinAngle = Math.floor(Math.random()*360 + 1440);
+let deg = Math.floor(Math.random()*360 + 1440);
 
 canvas.style.transition="transform 4s ease-out";
-canvas.style.transform="rotate("+spinAngle+"deg)";
+canvas.style.transform="rotate("+deg+"deg)";
 
 let result = options[Math.floor(Math.random()*options.length)];
 
-setTimeout(()=>{
+setTimeout(function(){
 
-document.getElementById("wheelContainer").style.display="none";
-document.getElementById("pointer").style.display="none";
+canvas.style.display="none";
 document.querySelector("button").style.display="none";
-document.getElementById("title").style.display="none";
 
-let resultScreen = document.getElementById("resultScreen");
-resultScreen.style.display="flex";
+let r = document.getElementById("result");
+let e = document.getElementById("explanation");
 
-document.getElementById("resultText").innerText = result;
+r.style.display="block";
+e.style.display="block";
+
+r.innerText = result;
+e.innerText = explanations[result];
 
 },4000);
 
